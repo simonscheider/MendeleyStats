@@ -15,7 +15,7 @@ __copyright__   = ""
 import plotly
 print plotly.__version__
 
-
+from plotly.graph_objs import Scatter, Bar, Layout
 
 
 from mendeley import Mendeley
@@ -137,6 +137,9 @@ d = splitByAttribute(tuples,1,0, extend=True)
 for i in sorted(d.items()):
     print (i[0] + ': ' +str(stat(i[1])))
 
+x = []
+y = []
+
 dc = sorted(stat(keywords).items(), key=lambda student: student[1], reverse=True)
 #print dc
 for i in dc:
@@ -144,11 +147,15 @@ for i in dc:
         print i
 
 #print years
-y = sorted((stat(years)).items(), key=lambda student: student[1], reverse=True)
+yearplot = sorted((stat(years)).items(), key=lambda student: student[1], reverse=True)
 #print y
-for i in y:
+for i in yearplot:
     if i[1]>1:
         print i
+        if (i[1]): x.append(i[0])
+        else: x.append(None)
+        if (i[0]): y.append(i[1])
+        else: y.append(None)
 
 jou = sorted((stat(journals)).items(), key=lambda student: student[1], reverse=True)
 #print y
@@ -156,19 +163,20 @@ for i in jou:
     if i[1]>2:
         print i
 
-
+url = plotly.offline.plot({
+    "data": [Bar(x=x, y=y)],
+    "layout": Layout(title="Number of Articles per year")
+    },filename=r'C:\Users\simon\Dropbox\Tracking technologies paper\figures\temp-plot.html')
+print url
 
 #doc = session.catalog.by_identifier(doi=doi, view='stats')
 #print '"%s" has %s readers.' % (doc.title, doc.reader_count)
 
 
 def main():
-   from plotly.graph_objs import Scatter, Layout
-url = plotly.offline.plot({
-    "data": [Scatter(x=[1, 2, 3, 4], y=[4, 3, 2, 1])],
-    "layout": Layout(title="hello world")
-},filename=r'C:\Users\simon\Dropbox\Tracking technologies paper\figures\temp-plot.html')
-print url
+    pass
+
+
 
 if __name__ == '__main__':
     main()
